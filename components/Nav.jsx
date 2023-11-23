@@ -8,6 +8,7 @@ const Nav = () => {
   const isUserLoggedIn = true;
 
   const [providers, setProviders] = useState(null);
+  const [toggleDropDown, settoggleDropDown] = useState(false);
 
   useEffect(() => {
     const setProviders = async () => {
@@ -55,6 +56,63 @@ const Nav = () => {
                 className="rounded-full"
               />
             </Link>
+          </div>
+        ) : (
+          <>
+            {providers &&
+              Object.values(providers).map((provider) => (
+                <button
+                  type="button"
+                  key={provider.name}
+                  onClick={() => signIn(provider.id)}
+                  className="black_btn capitalize"
+                >
+                  sign in with {provider.name}
+                </button>
+              ))}
+          </>
+        )}
+      </div>
+      {/* mobile navigation */}
+      <div className="sm:hidden flex flex-col">
+        {isUserLoggedIn ? (
+          <div className="flex">
+            <Image
+              src="/assets/images/logo.svg"
+              alt="promptopia logo"
+              width={30}
+              height={30}
+              className="object-contain"
+              onClick={() => settoggleDropDown((prev) => !prev)}
+            />
+            {toggleDropDown && (
+              <div className="dropdown">
+                <Link
+                  href="/profile"
+                  className="dropdown_link capitalize"
+                  onClick={() => settoggleDropDown(false)}
+                >
+                  my profile
+                </Link>
+                <Link
+                  href="/create-prompt"
+                  className="dropdown_link capitalize"
+                  onClick={() => settoggleDropDown(false)}
+                >
+                  create prompt
+                </Link>
+                <button
+                  type="button"
+                  className="black_btn capitalize w-full mt-5"
+                  onClick={() => {
+                    settoggleDropDown(false);
+                    signOut();
+                  }}
+                >
+                  sign out
+                </button>
+              </div>
+            )}
           </div>
         ) : (
           <>
