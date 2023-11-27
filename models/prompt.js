@@ -6,7 +6,7 @@ const PromptSchema = new Schema({
     ref: 'User',
   },
   prompt: {
-    type: stringify,
+    type: String,
     required: [true, 'Prompt is required'],
   },
   tag: {
