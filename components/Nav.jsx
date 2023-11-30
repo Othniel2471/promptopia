@@ -52,6 +52,7 @@ const Nav = () => {
             <Link href="/profile">
               <Image
                 src={session?.user.image}
+                alt="profile"
                 width={37}
                 height={37}
                 className="rounded-full"
