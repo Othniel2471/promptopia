@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import PromptCard from './PromptCard';
+import { set } from 'mongoose';
 
 const PromptCardList = ({ data, handleTagClick }) => {
   return (
@@ -18,8 +19,9 @@ const PromptCardList = ({ data, handleTagClick }) => {
 
 const Feed = () => {
   const [searchText, setsearchText] = useState('');
+  const [searchTimeout, setSearchTimeout] = useState(null);
+  const [searchedResults, setSearchedResults] = useState([]);
   const [posts, setPosts] = useState([]);
-  const handleSearchChange = (e) => {};
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -31,6 +33,32 @@ const Feed = () => {
 
     fetchPosts();
   }, []);
+
+  const filterPrompts = (searchText) => {
+    const regex = new RegExp(searchText, 'gi');
+    return posts.filter(
+      (post) =>
+        regex.test(post.creator.username) ||
+        regex.test(post.prompt) ||
+        regex.test(post.tag)
+    );
+  };
+
+  const handleSearchChange = (e) => {
+    clearTimeout(searchTimeout);
+    setsearchText(e.target.value);
+
+    setSearchTimeout(
+      setTimeout(() => {
+        setSearchedResults(filterPrompts(e.target.value));
+      }, 500)
+    );
+  };
+
+  const handleTagClick = (tagName) => {
+    setsearchText(tagName);
+    setSearchedResults(filterPrompts(tagName));
+  };
 
   return (
     <section className="feed">
@@ -44,8 +72,14 @@ const Feed = () => {
           className="search_input peer"
         />
       </form>
-
-      <PromptCardList data={posts} handleTagClick={() => {}} />
+      {searchText ? (
+        <PromptCardList
+          data={searchedResults}
+          handleTagClick={handleTagClick}
+        />
+      ) : (
+        <PromptCardList data={posts} handleTagClick={() => {}} />
+      )}
     </section>
   );
 };
