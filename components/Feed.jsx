@@ -58,6 +58,7 @@ const Feed = () => {
   const handleTagClick = (tagName) => {
     setsearchText(tagName);
     setSearchedResults(filterPrompts(tagName));
+    console.log('hello');
   };
 
   return (
@@ -78,7 +79,7 @@ const Feed = () => {
           handleTagClick={handleTagClick}
         />
       ) : (
-        <PromptCardList data={posts} handleTagClick={() => {}} />
+        <PromptCardList data={posts} handleTagClick={handleTagClick} />
       )}
     </section>
   );
